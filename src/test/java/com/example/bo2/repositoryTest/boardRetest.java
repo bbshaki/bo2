@@ -1,8 +1,11 @@
 package com.example.bo2.repositoryTest;
 
+import com.example.bo2.dto.BoardDTO;
 import com.example.bo2.entity.Board;
 import com.example.bo2.repository.BoardRepository;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -11,10 +14,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 @SpringBootTest
+@Log4j2
 public class boardRetest {
 
     @Autowired
     BoardRepository boardRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Test
     public void searchTest(){
@@ -58,6 +65,14 @@ public class boardRetest {
 
     }
 
+
+    @Test
+    public void findaa(){
+
+       log.info(modelMapper.map(boardRepository.findByBno(3L), BoardDTO.class));
+
+
+    }
 
 
 

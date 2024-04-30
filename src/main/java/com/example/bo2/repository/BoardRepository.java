@@ -1,5 +1,6 @@
 package com.example.bo2.repository;
 
+import com.example.bo2.dto.BoardDTO;
 import com.example.bo2.entity.Board;
 import com.example.bo2.repository.search.BoardSearch;
 import org.springframework.data.domain.Page;
@@ -14,4 +15,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch
 //
         @Query("select b from Board b where b.title like concat('%',:keyword,'%')")
         Page<Board> findKeyword(String keyword, Pageable pageable);
+
+        Board findByBno(Long a);
 }
