@@ -1,34 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{layout/layout1.html}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-
-
-<div layout:fragment="content">
-    <div th:text="${list}" ></div>
-    <div th:text="${dto}" ></div>
-    <div th:text="${map}" ></div>
-</div>
-
-    <script th:inline="javascript">
-        const list = [[${list}]]
-        let dto = [[${dto}]]
-        var map = [[${map}]]
-
-        console.log(list)
-        console.log(dto)
-        console.log(map)
-
-        alert(list);
-        alert(dto);
-        alert(map);
-
-    </script>
 
 </body>
 </html>
