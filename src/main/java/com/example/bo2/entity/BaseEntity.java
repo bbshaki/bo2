@@ -12,7 +12,6 @@ import java.time.LocalDate;
 
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
-@Getter
 public class BaseEntity {
 
     @CreatedDate
