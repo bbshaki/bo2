@@ -68,7 +68,10 @@ public class boardRetest {
 
     @Test
     public void findaa(){
-
+        log.info("날짜");
+        log.info("날짜");
+        log.info("날짜");
+        log.info("날짜");
         log.info("날짜");
        log.info(modelMapper.map(boardRepository.findByBno(3L), BoardDTO.class));
 
