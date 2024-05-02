@@ -41,6 +41,11 @@
                         <label class="control-label" for="modDate">수정일자</label>
                         <input name="modDate" type="text" class="form-control" id="modDate" th:value="${dto.modDate}" readonly>
                     </div>
+
+                        <input name="keyword" type="hidden" th:value="${pageRequestDTO.keyword}">
+                        <input name="page" type="hidden" th:value="${pageRequestDTO.page}">
+                        <input name="size" type="hidden" th:value="${pageRequestDTO.size}">
+                        <input name="type" type="hidden" th:value="${pageRequestDTO.type}">
                         <button type="submit" class="btn btn-default modifyBtn">저장</button>
                         <button type="submit" class="btn btn-default removeBtn">삭제</button>
                     <a class="btn btn-default listBtn" th:href="|@{/board/list}?${pageRequestDTO.getLink()}|">목록</a>
@@ -52,6 +57,28 @@
 
 </div>
 <script layout:fragment="script" th:inline="javascript">
+    const link = [[${pageRequestDTO.getLink()}]]
+    const formObj = document.querySelector("form");
+    const result = [[${result}]];
+    if(result){
+        alert(result)
+    }
+
+    document.querySelector(".modifyBtn").addEventListener("click", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+        formObj.action = `/board/modify?${link}`;
+        formObj.method = "post";
+        formObj.submit();
+    });
+    document.querySelector(".removeBtn").addEventListener("click", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+        formObj.action = '/board/remove';
+        formObj.method = "post";
+        formObj.submit();
+    });
+
 
     // document.querySelector(".listBtn").addEventListener("click", function (e){
     //     e.preventDefault();
