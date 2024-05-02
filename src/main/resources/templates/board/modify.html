@@ -1,14 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout1.html}">
+      layout:decorate="~{layout/basic.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
 <div layout:fragment="content">
-   수정
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">수정페이지</h1>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    글 수정
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/board/modify}" method="post">
+                    <div class="form-group has-success">
+                        <label class="control-label" for="bno">글 번호</label>
+                        <input name="bno" type="text" class="form-control" id="bno" th:value="${dto.bno}" readonly>
+                    </div>
+                    <div class="form-group has-success">
+                        <label class="control-label" for="title">제 목</label>
+                        <input name="title" type="text" class="form-control" id="title" th:value="${dto.title}">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="title">내 용</label>
+                        <textarea class="form-control" name="content" rows="3">[[${dto.content}]]</textarea>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label" for="writer">작성자</label>
+                        <input name="writer" type="text" class="form-control" id="writer" th:value="${dto.writer}" readonly>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label" for="regDate">등록일자</label>
+                        <input name="regDate" type="text" class="form-control" id="regDate" th:value="${dto.regDate}" readonly>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label" for="modDate">수정일자</label>
+                        <input name="modDate" type="text" class="form-control" id="modDate" th:value="${dto.modDate}" readonly>
+                    </div>
+                        <button type="submit" class="btn btn-default modifyBtn">저장</button>
+                        <button type="submit" class="btn btn-default removeBtn">삭제</button>
+                    <a class="btn btn-default listBtn" th:href="|@{/board/list}?${pageRequestDTO.getLink()}|">목록</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+<script layout:fragment="script" th:inline="javascript">
+
+    // document.querySelector(".listBtn").addEventListener("click", function (e){
+    //     e.preventDefault();
+    //
+    //     self.location = `/board/list`;
+    // });
+</script>
 </body>
 </html>
