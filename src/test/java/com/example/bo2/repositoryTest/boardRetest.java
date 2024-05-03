@@ -1,6 +1,7 @@
 package com.example.bo2.repositoryTest;
 
 import com.example.bo2.dto.BoardDTO;
+import com.example.bo2.dto.BoardListReplyCountDTO;
 import com.example.bo2.entity.Board;
 import com.example.bo2.repository.BoardRepository;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +26,12 @@ public class boardRetest {
 
     @Test
     public void searchTest(){
+        Pageable pageable = PageRequest.of(0, 10);
+        boardRepository.search1(pageable);
+    }
+
+    @Test
+    public void searchTest1(){
         Pageable pageable = PageRequest.of(0, 10);
         boardRepository.search1(pageable);
     }
@@ -63,6 +70,17 @@ public class boardRetest {
         System.out.println("시작페이지 " + boardPage.isFirst());
         System.out.println("다음페이지 " + boardPage.hasNext());
 
+    }
+
+    @Test
+    public void replyCountTest(){
+        String[] str = {"t", "w"};
+        String keyword = "목3";
+        Pageable pageable = PageRequest.of(0, 7, Sort.by("bno").descending());
+        Page<BoardListReplyCountDTO> boardListReplyCountDTOS =
+                boardRepository.searchWithReplyCount(str, keyword, pageable);
+
+        boardListReplyCountDTOS.forEach(boardListReplyCountDTO -> log.info(boardListReplyCountDTO));
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.bo2.service;
 
 import com.example.bo2.dto.BoardDTO;
+import com.example.bo2.dto.BoardListReplyCountDTO;
 import com.example.bo2.dto.PageRequestDTO;
 import com.example.bo2.dto.PageResponseDTO;
 import com.example.bo2.entity.Board;
@@ -15,6 +16,9 @@ public interface BoardService {
 
     // 페이징처리, 검색처리
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+
+    //페이징처리, 검색처리, 댓글수량, 목록
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
     public BoardDTO read(Long bno);
 

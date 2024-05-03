@@ -2,10 +2,12 @@ package com.example.bo2.controller;
 
 
 import com.example.bo2.dto.BoardDTO;
+import com.example.bo2.dto.BoardListReplyCountDTO;
 import com.example.bo2.dto.PageRequestDTO;
 import com.example.bo2.dto.PageResponseDTO;
 import com.example.bo2.entity.Board;
 import com.example.bo2.service.BoardService;
+import com.example.bo2.service.ReplyService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -27,6 +31,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final ReplyService replyService;
 
 
     @GetMapping("/register")
@@ -50,8 +55,9 @@ public class BoardController {
     }
     @GetMapping("/list")
     public void list(Model model, PageRequestDTO pageRequestDTO){
+        PageResponseDTO<BoardListReplyCountDTO> pageResponseDTO = boardService.listWithReplyCount(pageRequestDTO);
 //        List<Board> boardList = boardService.select();
-        PageResponseDTO<BoardDTO> pageResponseDTO = boardService.list(pageRequestDTO);
+//        PageResponseDTO<BoardDTO> pageResponseDTO = boardService.list(pageRequestDTO);
         model.addAttribute("list", pageResponseDTO);
 //        boardList.forEach(board -> log.info(board));
 
@@ -59,6 +65,7 @@ public class BoardController {
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, Model model, PageRequestDTO pageRequestDTO){
         model.addAttribute("dto", boardService.read(bno));
+//        model.addAttribute("rDto", replyService.read(150L));
     }
     @PostMapping("/modify")
     public String modify(@Valid BoardDTO boardDTO,

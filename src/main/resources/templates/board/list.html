@@ -67,7 +67,7 @@
                             <tr class="gradeU odd" role="row" th:each="dto: ${list.dtoList}">
                                 <td class="">[[${dto.bno}]]</td>
                                 <td class="">
-                                    <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">[[${dto.title}]]</a>
+                                    <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">[[${dto.title}]]</a> [ [[${dto.replyCount}]] ]
                                 </td>
                                 <td class="sorting_1">[[${dto.writer}]]</td>
                                 <td class="center">[[${dto.regDate}]]</td>

@@ -33,4 +33,6 @@ public class BoardDTO {
 
     private LocalDate modDate;
 
+    private Long replyCount; // 총 댓글수
+
 }
