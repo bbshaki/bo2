@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -91,6 +92,17 @@ public class BoardController {
     @PostMapping("/remove")
     public void remove(Long bno){
         boardService.remove(bno);
+    }
+
+    @GetMapping("/sample")
+    public void sample(){
+
+    }
+
+    @ResponseBody
+    @GetMapping("/sam")
+    public String sam(){
+        return "redirect:/board/list";
     }
 
 

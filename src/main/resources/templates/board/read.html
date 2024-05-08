@@ -36,12 +36,12 @@
                             <input name="writer" readonly type="text" th:value="${dto.writer}" class="form-control" id="writer"  placeholder="이름은요??">
                         </div>
                         <div class="form-group has-error">
-                            <label class="control-label" for="writer">등록일자</label>
-                            <input name="writer" readonly type="text" th:value="${dto.regDate}" class="form-control" id="writer"  placeholder="이름은요??">
+                            <label class="control-label" for="regDate">등록일자</label>
+                            <input name="regDate" readonly type="text" th:value="${dto.regDate}" class="form-control" id="regDate"  placeholder="이름은요??">
                         </div>
                         <div class="form-group has-error">
-                            <label class="control-label" for="writer">수정일자</label>
-                            <input name="writer" readonly type="text" th:value="${dto.modDate}" class="form-control" id="writer"  placeholder="이름은요??">
+                            <label class="control-label" for="modDate">수정일자</label>
+                            <input name="modDate" readonly type="text" th:value="${dto.modDate}" class="form-control" id="modDate"  placeholder="이름은요??">
                         </div>
                         <a th:href="|@{/board/modify(bno=${dto.bno})}&${pageRequestDTO.getLink()}|" class="btn btn-default">
                             수정
@@ -55,9 +55,11 @@
 
                 </div>
             </div>
-            <div class="chat-panel panel panel-default">
+            <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-comments fa-fw"></i> Chat <button class="rBtn">rrrr</button>
+                    <i class="fa fa-comments fa-fw"></i> Reply <button class="btn btn-default replyResiter" data-toggle="modal" data-target="#myModal">
+                    New Reply
+                </button>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -70,6 +72,42 @@
 
                     </ul>
 
+                    <div class="col-sm-6">
+                        <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
+                            <ul class="pagination">
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" data-rno id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <h4 class="modal-title" id="myModalLabel">Reply</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="replyText1">내용</label>
+                                    <input class="form-control replyText replyText1">
+                                    <label class="replyer1">작성자</label>
+                                    <input class="form-control replyer replyer1">
+                                    <label class="regDate1">등록일자</label>
+                                    <input class="form-control regDate regDate1">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="closeBtn">Close</button>
+                                    <button type="button" class="btn btn-default modBtn" >Modify</button>
+                                    <button type="button" class="btn btn-default reBtn">Remove</button>
+                                    <button type="button" class="btn btn-default saveBtn">Save</button>
+
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -78,70 +116,141 @@
     </div>
 
 
-
+    <script src="/js/reply.js"></script>
 
     <!--content-->
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
-    var rrr = document.querySelector(".rBtn");
-    var bno = [[${dto.bno}]];
-    var str = "";
-    var page = "";
-    var replylist = $(".replylist");
-    $.getJSON("/replies/list/" + bno, function (data){
-        console.log(bno);
+    let bno = [[${dto.bno}]]            //현재 몇번 글의 댓글인지 알기위해서
+    console.log(bno)
+    let str = "";                       //ul태그 안에 들어갈 html
+    let replylist = $(".replylist")     //댓글이 달리는 ul태그
+    let pagination = $(".pagination")
+    let str2 = ""; //댓글 페이징 처리를 위한 str2
+    let replyResiter = $(".replyResiter")
+    let replyText1 = $(".replyText1") // label + input
+    let replyer1 = $(".replyer1") // label + input
+    let regDate1 = $(".regDate1") // label + input
+    let replyText = $(".replyText")
+    let replyer = $(".replyer")
+    let regDate = $(".regDate")
+    let modal = $(".modal")
+    let saveBtn = $(".saveBtn") // 등록버튼
+    let modBtn = $(".modBtn") // 수정버튼
+    let reBtn = $(".reBtn") // 취소버튼
+
+    saveBtn.on("click", function (){
+        console.log(replyText.val())
+        console.log(replyer.val())
+        let reply = {"bno" : bno, "replyText" : replyText.val() , "replyer" : replyer.val()}
+        replyService.register(reply, function (data){
+            console.log(data)
+            alert(data.rno + " 번 댓글이 등록되었습니다")
+            showList(1)
+        })
+        modal.modal("hide")
+    })
+    modBtn.on("click", function (){
+        let reply = {"rno" : modal.data("rno"), "replyText" : replyText.val() }
+        replyService.modify(reply, function (data){
+            alert(data.rno + " 번 댓글이 수정되었습니다")
+            showList(reply.page)
+        })
+        modal.modal("hide")
+    })
+    reBtn.on("click", function (){
+        replyService.remove()
+    })
+
+    replyResiter.on("click", function (){
+        modal.find("button[id != closeBtn]").hide()
+        modal.find("input").hide() // input 태그 다 닫기
+        modal.find("label").hide()
+        replyText.val("")
+        replyer.val("")
+        regDate.val("")
+
+        replyText1.show()
+        replyer1.show()
+        saveBtn.show()
+
+
+    })
+
+    replylist.on("click", "li", function (e){
+        modal.modal("show")
+        modal.find("button[id != closeBtn]").hide()
+        modal.find("input").hide() // input 태그 다 닫기
+        modal.find("label").hide()
+        replyText.val("")
+        replyer.val("")
+        regDate.val("")
+        replyText1.show()
+        replyer1.show()
+        regDate1.show()
+        modBtn.show()
+        reBtn.show()
+
+        replyer.attr("readonly", true)
+        regDate.attr("readonly", true)
+        let rno = $(this).data("num");
+
+
+        replyService.read(rno, function (data){
+            console.log(data)
+            replyText.val(data.replyText)
+            replyer.val(data.replyer)
+            regDate.val(data.regDate)
+            modal.data("rno", data.rno)
+        })
+    })
+
+
+    let showList = function (page) {
         str = "";
-        replylist.html("");
-
-        console.log(data.dtoList);
-        for(let i = 0; i< data.dtoList.length; i++){
-            str +=  '<li className=" clearfix"><div className="chat-body clearfix"><div className="header">'
-            str +=  '<strong className="primary-font">'+ data.dtoList[i].rno + '</strong><small className="pull-right text-muted">'
-            str +=  '<i className="fa fa-clock-o fa-fw"></i> 12 mins ago</small>'
-            str +=  '</div><p>' + data.dtoList[i].replyText + '</p></div></li>'
-        }
-        replylist.html(str);
-
-
-    });
-    rrr.addEventListener("click", function (e){
-        bno += 1;
-        $.getJSON("/replies/list/" + bno, function (data){
-            console.log(bno);
-            str = "";
-            replylist.html("");
-
-            console.log(data.dtoList);
-            for(let i = 0; i< data.dtoList.length; i++){
-                str +=  '<li className=" clearfix"><div className="chat-body clearfix"><div className="header">'
-                str +=  '<strong className="primary-font">'+ data.dtoList[i].rno + '</strong><small className="pull-right text-muted">'
-                str +=  '<i className="fa fa-clock-o fa-fw"></i> 12 mins ago</small>'
-                str +=  '</div><p>' + data.dtoList[i].replyText + '</p></div></li>'
+        str2 = "";
+        replyService.list(page, function (data) {
+            console.log(data);
+            console.log(data.start);
+            for(let i = 0; i < data.dtoList.length; i++){
+                str += `<li data-num="${data.dtoList[i].rno}" class=" clearfix"><div class="chat-body clearfix"><div class="header">
+                    <strong class="primary-font">${data.dtoList[i].replyer}</strong><small class="pull-right text-muted">
+                    <i class="fa fa-clock-o fa-fw"></i>${data.dtoList[i].regDate}</small>
+                    </div><p>${data.dtoList[i].replyText}</p></div></li>`;
+            }
+            if(data.prev){
+                str2 += `<li  class="paginate_button previous " aria-controls="dataTables-example" tabindex="0" id="dataTables-example_previous">
+                <a data-num="${data.start -1}">이전</a>
+            </li>`;
+            }
+            for(let i = data.start, j=data.end ; i <= j ; i++){
+                str2 +=  `<li class="paginate_button ${i == data.page ? 'active' : ''}" aria-controls="dataTables-example" tabIndex="0">
+                    <a data-num="${i}">${i}</a>
+                </li>`;
 
             }
-
+            if(data.next){
+                str2 += `<li  class="paginate_button" aria-controls="dataTables-example" tabindex="0" id="dataTables-example_next">
+                <a data-num="${data.end + 1}">Next</a>
+            </li>`
+            }
+            pagination.html(str2);
             replylist.html(str);
 
+        })
+
+    }
+
+    pagination.on("click","a", function (e){
+        let target = $(e.target).data("num")
+        showList(target)
+    })
+
+    showList(1);
 
 
 
-        });
-    });
-
-
-
-
-
-
-
-   // document.querySelector(".listBtn").addEventListener("click", function (e) {
-   //     e.preventDefault();
-   //
-   //     let link = [[${pageRequestDTO.getLink()}]];
-   //
-   //     self.location = `/board/list?${link}`;
-   // });
 
 
 
