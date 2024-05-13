@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Title</title>
+</head>
+<body>
+<h1>sample</h1>
+
+<button class="get1">get1</button>
+<button class="get2">get2</button>
+<button class="get3">get3</button><br>
+
+<input name="title" class="title">
+<button class="inBtn">전송</button>
+<button class="inBtnP">P전송</button>
+
+<div class="get1div" style="width: 200px; height: fit-content; border: 1px solid black"></div>
+
+<script>
+
+    let get2 = $(".get2")
+    let get1div = $(".get1div")
+    let str = "";
+    let get3 = $(".get3")
+    let inBtn = $(".inBtn")
+    let inBtnP = $(".inBtnP")
+
+    inBtnP.on("click", function (e) {
+        let title = $(".title").val()
+        let titleJson = {"title": title}
+        // $.post("/sample/e", titleJson, function (data){
+        //     get1div.text(data)
+        // })
+        // $.ajax({
+        //     url : "/sample/f",
+        //     type : 'put',
+        //     contentType : "application/json; charset=utf-8",
+        //     data : titleJson,
+        //     success : function (data){
+        //         get1div.text(data)
+        //     }
+        // $.ajax({
+        //     url : "/sample/h",
+        //     type : 'get',
+        //     success : function (data){
+        //         get1div.text(data.bno + " " + data.title)
+        //     }
+        // })
+        // $.get("/board/sam", function (data){
+        //     get1div.text(data)
+        // })
+        // $.post("/sample/register", titleJson , function (data){
+        //     console.log(data)
+        // })
+
+        //     $.get("/sample/read", function (data){
+        //         console.log(data)
+        //         str += "<span>" + data.title + "</span><span>" + data.content + "</span>"
+        //     })
+        //     get1div.html(str)
+        // })
+
+        $.ajax({
+            url: "/sample/modify",
+            type: "post",
+            data: titleJson,
+            success: function (data) {
+                get1div.text(data.title)
+            }
+        })
+    })
+
+    inBtn.on("click", function (e){
+        // alert(title.val())
+        let title = $(".title").val()
+        let titleJson = {"title" : title}
+        console.log(titleJson);
+        $.get("/sample/d", titleJson , function (data){
+            get1div.text(data);
+        });
+    })
+
+    get3.on("click", function (e){
+        e.preventDefault();
+        $.get("/sample/c", function (data){
+            console.log(data)
+            for (let i = 0; i < data.length; i++){
+                str += "<span> bno : " + data[i].bno + "</span><span> title : " + data[i].title + "</span><br>"
+            }
+            get1div.html(str);
+        })
+    })
+
+
+    get2.on("click", function (e){
+        $.get("/sample/b", function (data){
+        str += "<ul>"
+        str += "<li> 번호 : " + data.bno + "</li>"
+        str += "<li> 제목 : " + data.title + "</li>"
+        str += "</ul>"
+        get1div.html(str);
+        })
+    })
+
+    $(".get1").on("click", function (e){
+        // $(".get1div").val("홍길동")
+        // $(".get1div").html("<input value='신짱구'>");
+        $.get("/sample/a", function (data){
+            console.log(data)
+            // $(".get1div").text(data);
+            $(".get1div").html("<a href='aaa'>" + data + "</a>")
+        })
+    });
+</script>
+</body>
+</html>

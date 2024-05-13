@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">상품등록</h1>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    등록할 상품 정보를 작성해 주세요!
+                </div>
+                <div class="panel-body">
+                    <form role="form" action="/item/register" method="post">
+                        <div class="form-group has-success">
+                            <label class="control-label" for="itemName">상품명</label>
+                            <input name="itemName" type="text" class="form-control" id="itemName" placeholder="3~20 글자로 작성">
+                        </div>
+                        <div class="form-group has-success">
+                            <label class="control-label" for="itemEx">상세설명</label>
+                            <textarea class="form-control" name="itemEx" rows="3" id="itemEx" placeholder="300 글자 이하로 작성"></textarea>
+                        </div>
+                        <div class="form-group has-error">
+                            <label class="control-label" for="price">가격</label>
+                            <input class="form-control" name="price" rows="3" id="price">
+                        </div>
+                        <div class="form-group has-error">
+                            <label class="control-label" for="itemQty">수량</label>
+                            <input name="itemQty" type="number" class="form-control" id="itemQty">
+                        </div>
+                        <div class="form-group has-error">
+                            <label class="control-label" for="seller">판매자</label>
+                            <input name="seller" type="text" class="form-control" id="seller">
+                        </div>
+                        <button type="submit" class="btn btn-default registerBtn">상품등록</button>
+                        <button type="submit" class="btn btn-default listBtn">목록으로 돌아가기</button>
+                        <button type="reset" class="btn btn-default">초기화</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script layout:fragment="script" th:inline="javascript">
+    const errors = [[${errors}]];
+    console.log(errors);
+    let errorMsg ='';
+    if(errors){
+        for(let i = 0; i < errors.length; i++){
+            // errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+            if(errors[i].field == 'itemName'){
+                if(errors[i].code == 'Size'){
+                    errorMsg += "!!상품명은 3 글자 이상 20 글자 이하만 가능합니다!! \n"
+                } else {
+                    errorMsg += "!!상품명을 입력해 주세요!! \n"
+                }
+            }
+            if(errors[i].field == 'itemEx'){
+                    errorMsg += " !!상세설명이 빈칸일 수 없습니다!! \n"
+                }
+            if(errors[i].field == 'price'){
+                errorMsg += "!!가격이 빈칸일 수 없습니다!! \n"
+            }
+            if(errors[i].field == 'itemQty'){
+                errorMsg += "!!수량이 빈칸일 수 없습니다!! \n"
+            }
+            if(errors[i].field == 'seller'){
+                errorMsg += "!!판매자명이 빈칸일 수 없습니다!! \n"
+            }
+        }
+        alert(errorMsg);
+    }
+    document.querySelector(".listBtn").addEventListener("click", function (e){
+        e.preventDefault();
+
+        self.location = '/item/list';
+    });
+</script>
+</body>
+</html>
