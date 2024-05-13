@@ -47,6 +47,20 @@
                             <label class="control-label" for="modDate">수정일자</label>
                             <input name="modDate" readonly type="text" th:value="${dto.modDate}" class="form-control" id="modDate"  placeholder="이름은요??">
                         </div>
+                        <div class="col-lg-4" th:if="${not #lists.isEmpty(imgdto)}" style="width: 500px">
+                            <div class="panel panel-default" th:each="img, status:${imgdto}">
+                                <div class="panel-heading">
+                                        [[${img.originImgName}]]
+                                </div>
+                                <div class="panel-body">
+                                    <img th:src="@{|/images/@{${#temporals.format(img.regDate, 'yyMMdd')}}/@{${img.imgName}}|}" alt="사진" width="300px">
+                                </div>
+                                <div class="panel-footer">
+                                    Panel Footer
+                                </div>
+                            </div>
+                        </div>
+                        </div>
                         <a th:href="|@{/board/modify(bno=${dto.bno})}&${pageRequestDTO.getLink()}|" class="btn btn-default">
                             수정
                         </a>
